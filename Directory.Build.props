@@ -11,6 +11,11 @@
     <TargetFramework>net4.6.1</TargetFramework>
 
     <Nullable>disable</Nullable>
+
+    <!-- Workaround for https://github.com/dotnet/roslyn/issues/41640 -->
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1574;CS1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup Label="Common Directories">
