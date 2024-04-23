@@ -1,9 +1,9 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
+
 using LiveSplit.ASL;
 using LiveSplit.Model;
 using LiveSplit.Options;
@@ -22,12 +22,12 @@ namespace LiveSplit.UI.Components
         private bool _do_reload;
         private string _old_script_path;
 
-        private Timer _update_timer;
-        private FileSystemWatcher _fs_watcher;
+        private readonly Timer _update_timer;
+        private readonly FileSystemWatcher _fs_watcher;
 
-        private ComponentSettings _settings;
+        private readonly ComponentSettings _settings;
 
-        private LiveSplitState _state;
+        private readonly LiveSplitState _state;
 
         public ASLComponent(LiveSplitState state)
         {
@@ -39,8 +39,8 @@ namespace LiveSplit.UI.Components
 
             async void handler<T>(object sender, T args)
             {
-              await Task.Delay(200);
-              _do_reload = true;
+                await Task.Delay(200);
+                _do_reload = true;
             };
 
             _fs_watcher.Changed += handler;
@@ -93,8 +93,8 @@ namespace LiveSplit.UI.Components
         }
 
         public override void Update(IInvalidator invalidator, LiveSplitState state, float width, float height,
-            LayoutMode mode) { }
-
+            LayoutMode mode)
+        { }
 
         private void UpdateScript()
         {
@@ -183,7 +183,9 @@ namespace LiveSplit.UI.Components
         private void ScriptCleanup()
         {
             if (Script == null)
+            {
                 return;
+            }
 
             try
             {

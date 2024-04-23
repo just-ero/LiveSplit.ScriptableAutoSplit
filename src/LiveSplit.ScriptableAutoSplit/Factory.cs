@@ -1,4 +1,5 @@
 ﻿using System;
+
 using LiveSplit.Model;
 using LiveSplit.UI.Components;
 
@@ -17,7 +18,14 @@ namespace LiveSplit.UI.Components
         public string UpdateURL => "http://livesplit.org/update/";
         public string XMLURL => "http://livesplit.org/update/Components/update.LiveSplit.ScriptableAutoSplit.xml";
 
-        public IComponent Create(LiveSplitState state) => new ASLComponent(state);
-        public IComponent Create(LiveSplitState state, string script) => new ASLComponent(state, script);
+        public IComponent Create(LiveSplitState state)
+        {
+            return new ASLComponent(state);
+        }
+
+        public IComponent Create(LiveSplitState state, string script)
+        {
+            return new ASLComponent(state, script);
+        }
     }
 }

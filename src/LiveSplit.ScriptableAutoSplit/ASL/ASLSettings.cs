@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+
 using LiveSplit.Options;
 
 namespace LiveSplit.ASL
@@ -40,7 +41,7 @@ namespace LiveSplit.ASL
 
         public ASLSettingsBuilder Builder;
         public ASLSettingsReader Reader;
-        
+
         public ASLSettings()
         {
             Settings = new Dictionary<string, ASLSetting>();
@@ -53,11 +54,19 @@ namespace LiveSplit.ASL
         public void AddSetting(string name, bool default_value, string description, string parent)
         {
             if (description == null)
+            {
                 description = name;
+            }
+
             if (parent != null && !Settings.ContainsKey(parent))
+            {
                 throw new ArgumentException($"Parent for setting '{name}' is not a setting: {parent}");
+            }
+
             if (Settings.ContainsKey(name))
+            {
                 throw new ArgumentException($"Setting '{name}' was already added");
+            }
 
             var setting = new ASLSetting(name, default_value, description, parent);
             Settings.Add(name, setting);
@@ -69,7 +78,9 @@ namespace LiveSplit.ASL
             // Don't cause error if setting doesn't exist, but still inform script
             // author since that usually shouldn't happen.
             if (Settings.ContainsKey(name))
+            {
                 return GetSettingValueRecursive(Settings[name]);
+            }
 
             Log.Info("[ASL] Custom Setting Key doesn't exist: " + name);
 
@@ -84,7 +95,9 @@ namespace LiveSplit.ASL
         public bool GetBasicSettingValue(string name)
         {
             if (BasicSettings.ContainsKey(name))
+            {
                 return BasicSettings[name].Value;
+            }
 
             return false;
         }
@@ -94,17 +107,20 @@ namespace LiveSplit.ASL
             return BasicSettings.ContainsKey(name);
         }
 
-
         /// <summary>
         /// Returns true only if this setting and all it's parent settings are true.
         /// </summary>
         private bool GetSettingValueRecursive(ASLSetting setting)
         {
             if (!setting.Value)
+            {
                 return false;
+            }
 
             if (setting.Parent == null)
+            {
                 return setting.Value;
+            }
 
             return GetSettingValueRecursive(Settings[setting.Parent]);
         }
@@ -116,7 +132,7 @@ namespace LiveSplit.ASL
     public class ASLSettingsBuilder
     {
         public string CurrentDefaultParent { get; set; }
-        private ASLSettings _s;
+        private readonly ASLSettings _s;
 
         public ASLSettingsBuilder(ASLSettings s)
         {
@@ -126,7 +142,9 @@ namespace LiveSplit.ASL
         public void Add(string id, bool default_value = true, string description = null, string parent = null)
         {
             if (parent == null)
+            {
                 parent = CurrentDefaultParent;
+            }
 
             _s.AddSetting(id, default_value, description, parent);
         }
@@ -134,7 +152,9 @@ namespace LiveSplit.ASL
         public void SetToolTip(string id, string text)
         {
             if (!_s.Settings.ContainsKey(id))
+            {
                 throw new ArgumentException($"Can't set tooltip, '{id}' is not a setting");
+            }
 
             _s.Settings[id].ToolTip = text;
         }
@@ -145,7 +165,7 @@ namespace LiveSplit.ASL
     /// </summary>
     public class ASLSettingsReader
     {
-        private ASLSettings _s;
+        private readonly ASLSettings _s;
 
         public ASLSettingsReader(ASLSettings s)
         {
@@ -156,10 +176,10 @@ namespace LiveSplit.ASL
         {
             get { return _s.GetSettingValue(id); }
         }
-        
+
         public bool ContainsKey(string key)
         {
-            return _s.Settings.ContainsKey(key);   
+            return _s.Settings.ContainsKey(key);
         }
 
         public bool StartEnabled

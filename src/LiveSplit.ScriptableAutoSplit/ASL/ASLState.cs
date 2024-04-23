@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
+
 using LiveSplit.ComponentUtil;
 
 namespace LiveSplit.ASL
@@ -29,16 +30,20 @@ namespace LiveSplit.ASL
         public ASLState RefreshValues(Process p)
         {
             var clone = (ASLState)Clone();
-            var dict = ((IDictionary<string, object>)Data);
+            var dict = (IDictionary<string, object>)Data;
 
             foreach (var value_definition in ValueDefinitions)
             {
                 var value = GetValue(p, value_definition.Type, value_definition.Pointer);
 
                 if (dict.ContainsKey(value_definition.Identifier))
+                {
                     dict[value_definition.Identifier] = value;
+                }
                 else
+                {
                     dict.Add(value_definition.Identifier, value);
+                }
             }
 
             return clone;
@@ -81,6 +86,7 @@ namespace LiveSplit.ASL
                         var length = int.Parse(type.Substring("byte".Length));
                         return pointer.DerefBytes(p, length);
                     }
+
                     break;
             }
 
@@ -94,6 +100,7 @@ namespace LiveSplit.ASL
             {
                 ((IDictionary<string, object>)clone).Add(pair);
             }
+
             return new ASLState() { Data = clone, ValueDefinitions = new List<ASLValueDefinition>(ValueDefinitions) };
         }
     }

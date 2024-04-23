@@ -1,9 +1,11 @@
-﻿using Irony.Parsing;
-using LiveSplit.ComponentUtil;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
+using Irony.Parsing;
+
+using LiveSplit.ComponentUtil;
 
 namespace LiveSplit.ASL
 {
@@ -64,7 +66,10 @@ namespace LiveSplit.ASL
 
                 state.GameVersion = version;
                 if (!states.ContainsKey(process_name))
+                {
                     states.Add(process_name, new List<ASLState>());
+                }
+
                 states[process_name].Add(state);
             }
 

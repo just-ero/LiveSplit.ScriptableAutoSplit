@@ -1,11 +1,12 @@
-﻿using LiveSplit.Model;
-using System;
+﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Dynamic;
 using System.Linq;
 using System.Reflection;
+
+using LiveSplit.Model;
 
 namespace LiveSplit.ASL
 {
@@ -21,12 +22,14 @@ namespace LiveSplit.ASL
 
         public Module Module { get; }
 
-        private dynamic _compiled_code;
+        private readonly dynamic _compiled_code;
 
         public ASLMethod(string code, string name = null, int script_line = 0)
         {
             if (code == null)
+            {
                 throw new ArgumentNullException(nameof(code));
+            }
 
             Name = name;
             IsEmpty = string.IsNullOrWhiteSpace(code);
@@ -65,8 +68,8 @@ public class CompiledScript
     {{
         var memory = game;
         var modules = game != null ? game.ModulesWow64Safe() : null;
-        { user_code_start_marker }
-	    { code }
+        {user_code_start_marker}
+	    {code}
 	    return null;
     }}
 }}";
@@ -78,7 +81,8 @@ public class CompiledScript
                     LineOffset = script_line - compiled_code_line;
                 }
 
-                var parameters = new CompilerParameters() {
+                var parameters = new CompilerParameters()
+                {
                     GenerateInMemory = true,
                     CompilerOptions = "/optimize /d:TRACE /debug:pdbonly",
                 };
@@ -95,7 +99,9 @@ public class CompiledScript
 
                 var res = provider.CompileAssemblyFromSource(parameters, source);
                 if (res.Errors.HasErrors)
+                {
                     throw new ASLCompilerException(this, res.Errors);
+                }
 
                 Module = res.CompiledAssembly.ManifestModule;
                 var type = res.CompiledAssembly.GetType("CompiledScript");
@@ -118,6 +124,7 @@ public class CompiledScript
             {
                 throw new ASLRuntimeException(this, ex);
             }
+
             version = _compiled_code.version;
             refreshRate = _compiled_code.refreshRate;
             return ret;
